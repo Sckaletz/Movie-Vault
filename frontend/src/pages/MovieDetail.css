@@ -1,0 +1,267 @@
+.movie-detail {
+  position: relative;
+}
+
+.back-btn {
+  position: relative;
+  z-index: 10;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1rem;
+}
+
+.back-btn:hover {
+  background-color: #ff5252;
+}
+
+.detail-backdrop {
+  position: relative;
+  width: 100vw;
+  height: 400px;
+  margin-left: calc(-50vw + 50%);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.detail-backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.backdrop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent, #0f0f0f);
+}
+
+.detail-content {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 2rem;
+  margin-top: -100px;
+  position: relative;
+  z-index: 5;
+}
+
+.detail-poster {
+  width: 250px;
+  aspect-ratio: 500 / 750;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  background-color: #2a2a2a;
+}
+
+.detail-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-poster-detail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #606060;
+}
+
+.detail-info h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.detail-year {
+  font-size: 1.1rem;
+  color: #909090;
+  margin-bottom: 1rem;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meta-label {
+  color: #909090;
+  font-weight: 500;
+}
+
+.rating-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #ff6b6b;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.genre-tag {
+  display: inline-block;
+  background-color: #2a2a2a;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.overview {
+  margin-bottom: 2rem;
+}
+
+.overview h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.overview p {
+  line-height: 1.6;
+  color: #d0d0d0;
+}
+
+.cast {
+  margin-bottom: 2rem;
+}
+
+.cast h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.cast-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.cast-member {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.cast-member:hover {
+  opacity: 0.7;
+}
+
+.cast-photo {
+  width: 100%;
+  aspect-ratio: 500 / 750;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.cast-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-photo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #606060;
+  font-size: 0.8rem;
+}
+
+.cast-info {
+  padding: 0 0.25rem;
+}
+
+.cast-name {
+  font-weight: 500;
+  margin: 0;
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cast-character {
+  font-size: 0.85rem;
+  color: #909090;
+  margin: 0.25rem 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.detail-loading,
+.detail-error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.detail-error {
+  color: #ff6b6b;
+}
+
+@media (max-width: 1024px) {
+  .detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-poster {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .detail-info h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-backdrop {
+    height: 250px;
+  }
+
+  .detail-content {
+    margin-top: -50px;
+  }
+
+  .detail-info h1 {
+    font-size: 1.5rem;
+  }
+
+  .detail-meta {
+    gap: 1rem;
+  }
+
+  .cast-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
