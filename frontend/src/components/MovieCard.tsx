@@ -11,9 +11,10 @@ interface Movie {
 interface MovieCardProps {
   movie: Movie;
   onClick: () => void;
+  isSeen?: boolean;
 }
 
-function MovieCard({ movie, onClick }: MovieCardProps) {
+function MovieCard({ movie, onClick, isSeen }: MovieCardProps) {
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : null;
@@ -30,6 +31,7 @@ function MovieCard({ movie, onClick }: MovieCardProps) {
         ) : (
           <div className="no-poster">No Poster</div>
         )}
+        {isSeen && <div className="seen-badge">Seen</div>}
         {movie.vote_average > 0 && (
           <div className="movie-rating">{movie.vote_average.toFixed(1)}</div>
         )}
