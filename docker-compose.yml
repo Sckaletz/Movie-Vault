@@ -14,6 +14,7 @@ services:
       - edge
       - backend
     restart: unless-stopped
+
   frontend:
     build:
       context: ./frontend
@@ -28,6 +29,7 @@ services:
       - edge
       - backend
     restart: unless-stopped
+
   db:
     image: postgres:16-alpine
     container_name: movie-vault-db
@@ -47,9 +49,11 @@ services:
     networks:
       - backend
     restart: unless-stopped
+
 networks:
   edge:
   backend:
     internal: true
+    
 volumes:
   pgdata:
