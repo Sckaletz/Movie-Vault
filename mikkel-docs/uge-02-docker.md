@@ -28,3 +28,31 @@ Siden kører på mit eget domæne **varovejcontemporary.com** (Cloudflare, fra u
 ## Næste skridt
 
 Docker Compose, så backend (og database) kan køre sammen med frontenden.
+
+---
+
+# Tirsdag — Docker Compose + reverse proxy
+
+I dag samlede jeg hele stacken (frontend + backend + database) i én `docker-compose.yml` og fik det op at køre på serveren bag domænet.
+
+## Hvad jeg lavede
+
+- Skrevet `backend/Dockerfile` (+ `.dockerignore`) og en `docker-compose.yml` i roden med tre services: `frontend` (nginx, port 80), `backend` (Express, 5001), `db` (postgres:16).
+- Lagt `.env`-filer på serveren.
+- Db'en kører, men bruges ikke i koden endnu — bare for at have den klar.
+- **Reverse proxy:** frontend kaldte `http://localhost:5000/api` → blokeret (CORS + mixed content, fordi siden er HTTPS). Løst ved at lade frontend-nginx proxye `/api` → `backend:5001` (`frontend/nginx.conf`) og bruge en **relativ** URL `VITE_API_URL=/api`.
+- Fejlsøgt "no movies found": backendens TMDB-nøgle var **afkortet** i `.env`, fordi en lang linje knækkede ved copy-paste i terminalen. Fikset ved at kopiere filen op med `scp`.
+
+## Læring
+
+- **`.env`-filer skal manuelt på serveren** (scp). Compose læser dem fra serverens disk, ikke fra skyen.
+- **Lange linjer (API-nøgler/tokens) over SSH: brug `scp`, ikke paste** — paste knækker dem, og så fejler ting med kryptiske beskeder.
+- **Reverse proxy er best practice** for frontend+backend bag ét domæne: samme origin → ingen CORS, ingen mixed content, ingen hardcoded IP. Frontend laver bare relative `/api`-kald.
+- **Mixed content:** en HTTPS-side må ikke kalde `http://` — derfor virker en hardcoded HTTP-IP aldrig.
+- **`env_file` læses kun når containeren oprettes** — efter ændring skal man `docker compose up -d --force-recreate <service>`, ikke bare `restart`.
+- **Sikkerhed:** bind db (og backend) til `127.0.0.1` så de ikke er åbne mod internettet; kun frontend:80 er public (Cloudflare sender alt videre dertil).
+- Cloudflare ("Flexible" SSL) terminerer HTTPS og sender alle stier videre til serveren på port 80.
+
+## Næste skridt
+
+Koble backend til databasen i koden. (Og evt. fikse backendens `tsc`-build, som er brudt — containeren kører TS direkte via tsx indtil videre.)
