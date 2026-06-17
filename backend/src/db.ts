@@ -10,9 +10,18 @@ function getDatabaseUrl(): string {
   return url.replace(/^['"]|['"]$/g, "");
 }
 
+function shouldUseSsl(url: string): boolean {
+  // Enable SSL only for managed/remote databases that request it
+  // (e.g. "...sslmode=require"). A local Postgres (such as the Docker
+  // "db" service) does not support SSL by default, so disable it there.
+  return /sslmode=require/i.test(url);
+}
+
+const databaseUrl = getDatabaseUrl();
+
 export const pool = new Pool({
-  connectionString: getDatabaseUrl(),
-  ssl: { rejectUnauthorized: false },
+  connectionString: databaseUrl,
+  ssl: shouldUseSsl(databaseUrl) ? { rejectUnauthorized: false } : false,
 });
 
 export async function initDatabase(): Promise<void> {
