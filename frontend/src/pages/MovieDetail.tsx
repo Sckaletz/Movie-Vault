@@ -35,7 +35,7 @@ function MovieDetail({ movieId, onBack }: MovieDetailProps) {
   const [seenError, setSeenError] = useState<string | null>(null);
   const { user, seenMovieIds, toggleSeen } = useAuth();
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const apiUrl = import.meta.env.VITE_API_URL;
   const isSeen = seenMovieIds.has(movieId);
 
   useEffect(() => {
