@@ -19,5 +19,4 @@
     "strict": true
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.app.json" }]
 }
