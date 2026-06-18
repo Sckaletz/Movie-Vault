@@ -13,7 +13,7 @@ function Navbar({ onNavigate, currentPage }: NavbarProps) {
     <nav className="navbar">
       <div className="nav-container">
         <div className="nav-brand" onClick={() => onNavigate("home")}>
-          🎬 Movie Vault
+          🎬 Mikkel CD TEST Movie Vault
         </div>
         <button
           className="nav-toggle"
