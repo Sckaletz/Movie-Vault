@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import MovieCard from "./MovieCard";
+import { useAuth } from "../context/AuthContext";
 import "./MovieGrid.css";
 
 interface Movie {
@@ -26,6 +27,7 @@ function MovieGrid({
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { seenMovieIds } = useAuth();
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -72,6 +74,7 @@ function MovieGrid({
           <MovieCard
             key={movie.id}
             movie={movie}
+            isSeen={seenMovieIds.has(movie.id)}
             onClick={() => onSelectMovie(movie.id)}
           />
         ))}

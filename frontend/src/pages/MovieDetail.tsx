@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./MovieDetail.css";
 
 interface MovieData {
@@ -30,8 +31,12 @@ function MovieDetail({ movieId, onBack }: MovieDetailProps) {
   const [movie, setMovie] = useState<MovieData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [seenLoading, setSeenLoading] = useState(false);
+  const [seenError, setSeenError] = useState<string | null>(null);
+  const { user, seenMovieIds, toggleSeen } = useAuth();
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const isSeen = seenMovieIds.has(movieId);
 
   useEffect(() => {
     const fetchMovieDetail = async () => {
@@ -68,6 +73,21 @@ function MovieDetail({ movieId, onBack }: MovieDetailProps) {
     : null;
   const year = new Date(movie.release_date).getFullYear();
 
+  const handleToggleSeen = async () => {
+    if (!user) return;
+    setSeenLoading(true);
+    setSeenError(null);
+    try {
+      await toggleSeen(movieId);
+    } catch (err) {
+      setSeenError(
+        err instanceof Error ? err.message : "Failed to update seen status",
+      );
+    } finally {
+      setSeenLoading(false);
+    }
+  };
+
   return (
     <div className="movie-detail">
       <button className="back-btn" onClick={onBack}>
@@ -93,6 +113,27 @@ function MovieDetail({ movieId, onBack }: MovieDetailProps) {
         <div className="detail-info">
           <h1>{movie.title}</h1>
           <p className="detail-year">{year}</p>
+
+          <div className="seen-actions">
+            {user ? (
+              <button
+                className={`seen-btn ${isSeen ? "seen-btn--active" : ""}`}
+                onClick={handleToggleSeen}
+                disabled={seenLoading}
+              >
+                {seenLoading
+                  ? "Saving..."
+                  : isSeen
+                    ? "✓ Marked as Seen"
+                    : "Mark as Seen"}
+              </button>
+            ) : (
+              <p className="seen-login-hint">
+                Sign in to track movies you&apos;ve seen
+              </p>
+            )}
+            {seenError && <p className="seen-error">{seenError}</p>}
+          </div>
 
           <div className="detail-meta">
             <div className="meta-item">

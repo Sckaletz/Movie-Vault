@@ -89,6 +89,55 @@
   margin-bottom: 1rem;
 }
 
+.seen-actions {
+  margin-bottom: 1.5rem;
+}
+
+.seen-btn {
+  background-color: #2a2a2a;
+  color: white;
+  border: 2px solid #444;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.seen-btn:hover:not(:disabled) {
+  border-color: #51cf66;
+  color: #51cf66;
+}
+
+.seen-btn--active {
+  background-color: #51cf66;
+  border-color: #51cf66;
+  color: white;
+}
+
+.seen-btn--active:hover:not(:disabled) {
+  background-color: #40c057;
+  border-color: #40c057;
+  color: white;
+}
+
+.seen-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.seen-login-hint {
+  color: #909090;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.seen-error {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+}
+
 .detail-meta {
   display: flex;
   gap: 2rem;

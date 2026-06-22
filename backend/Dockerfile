@@ -1,14 +1,18 @@
+# backend/Dockerfile
 FROM node:20-alpine
+
 WORKDIR /app
 
-# 1. Copy package files first
+# Install dependencies (tsx is used to run the TypeScript sources directly)
 COPY package*.json ./
-
-# 2. Install dependencies
 RUN npm install
 
-# 3. Copy the rest of the code
+# Copy source code
 COPY . .
 
-# 4. Run the app
+ENV NODE_ENV=production
+
+EXPOSE 5000
+
+# Run the TypeScript entrypoint directly with tsx
 CMD ["node", "--import", "tsx", "./src/index.ts"]

@@ -1,16 +1,32 @@
-FROM node:20-alpine AS builder
+# frontend/Dockerfile
+# Stage 1: Build the React app with Vite
+FROM node:20-alpine AS build
+
 WORKDIR /app
+
+# Build-time variables consumed by Vite (must be present during `npm run build`)
+ARG VITE_API_URL=/api
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
-# Baked into the build by Vite. "/api" is a relative URL, so the browser calls
-# the same origin it loaded from (e.g. https://varovejcontemporary.com/api).
-ARG VITE_API_URL=/api
-ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
+# Stage 2: Serve the static build with Nginx
 FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Custom config: SPA fallback + reverse proxy for the API
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets from the build stage
+COPY --from=build /app/dist /usr/share/nginx/html
+
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]

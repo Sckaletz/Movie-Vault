@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -8,11 +9,17 @@ interface NavbarProps {
 
 function Navbar({ onNavigate, currentPage }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut, loading } = useAuth();
+
+  const handleNavigate = (page: string) => {
+    onNavigate(page);
+    setIsOpen(false);
+  };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <div className="nav-brand" onClick={() => onNavigate("home")}>
+        <div className="nav-brand" onClick={() => handleNavigate("home")}>
           🎬 Movie Vault
         </div>
         <button
@@ -26,10 +33,7 @@ function Navbar({ onNavigate, currentPage }: NavbarProps) {
           <li>
             <a
               className={currentPage === "home" ? "active" : ""}
-              onClick={() => {
-                onNavigate("home");
-                setIsOpen(false);
-              }}
+              onClick={() => handleNavigate("home")}
             >
               Popular
             </a>
@@ -37,13 +41,37 @@ function Navbar({ onNavigate, currentPage }: NavbarProps) {
           <li>
             <a
               className={currentPage === "trending" ? "active" : ""}
-              onClick={() => {
-                onNavigate("trending");
-                setIsOpen(false);
-              }}
+              onClick={() => handleNavigate("trending")}
             >
               Trending
             </a>
+          </li>
+          <li>
+            <a
+              className={currentPage === "seen" ? "active" : ""}
+              onClick={() => handleNavigate("seen")}
+            >
+              Movies I&apos;ve Seen
+            </a>
+          </li>
+          <li className="nav-auth">
+            {!loading && (
+              user ? (
+                <div className="nav-user">
+                  <span className="nav-email">{user.email}</span>
+                  <button className="nav-signout" onClick={() => signOut()}>
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="nav-signin"
+                  onClick={() => handleNavigate("auth")}
+                >
+                  Sign In
+                </button>
+              )
+            )}
           </li>
         </ul>
       </div>

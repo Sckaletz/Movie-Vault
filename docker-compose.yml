@@ -16,6 +16,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   # 2. Backend API — starts once the database is healthy
   backend:
     build: ./backend
@@ -32,6 +33,7 @@ services:
         condition: service_healthy
     ports:
       - "5000:5000"
+
   # 3. Frontend — built with Vite and served by Nginx (also proxies /api)
   frontend:
     build:
@@ -42,13 +44,10 @@ services:
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
     restart: always
-    network_mode: "host"
-    # ports:
-    #   - "80:80"
-    # expose:
-    #   - "80"
+    ports:
+      - "80:80"
     depends_on:
       - backend
+
 volumes:
   postgres_data:
- 

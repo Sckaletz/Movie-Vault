@@ -1,0 +1,52 @@
+.seen-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #909090;
+  font-size: 1.1rem;
+}
+
+.seen-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.seen-empty h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.seen-empty p {
+  color: #909090;
+  margin-bottom: 1.5rem;
+}
+
+.seen-signin-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.seen-signin-btn:hover {
+  background-color: #ff5252;
+}
+
+.seen-empty-inline {
+  text-align: center;
+  padding: 2rem;
+  color: #909090;
+}
+
+.seen-empty-inline p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.seen-empty-hint {
+  font-size: 0.95rem !important;
+  color: #707070 !important;
+}
