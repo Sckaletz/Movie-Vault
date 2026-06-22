@@ -39,10 +39,13 @@ services:
     build:
       context: ./frontend
       args:
+        # The app calls /api, which Nginx proxies to the backend container
         VITE_API_URL: /api
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
     restart: always
+    ports:
+      - "80:80"
     depends_on:
       - backend
 
