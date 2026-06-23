@@ -12,7 +12,7 @@ router.get("/seen", requireAuth, async (req: AuthenticatedRequest, res) => {
     );
     res.json({ movies: result.rows });
   } catch (error) {
-    console.error("Error fetching seen movies:", error);
+    console.error("Error fetching seen movies:", (error as Error).message);
     res.status(500).json({ error: "Failed to fetch seen movies" });
   }
 });
@@ -30,7 +30,7 @@ router.get("/seen/:movieId", requireAuth, async (req: AuthenticatedRequest, res)
     );
     res.json({ seen: result.rows.length > 0 });
   } catch (error) {
-    console.error("Error checking seen status:", error);
+    console.error("Error checking seen status:", (error as Error).message);
     res.status(500).json({ error: "Failed to check seen status" });
   }
 });
@@ -50,7 +50,7 @@ router.post("/seen/:movieId", requireAuth, async (req: AuthenticatedRequest, res
     );
     res.json({ seen: true, movie_id: movieId });
   } catch (error) {
-    console.error("Error marking movie as seen:", error);
+    console.error("Error marking movie as seen:", (error as Error).message);
     res.status(500).json({ error: "Failed to mark movie as seen" });
   }
 });
@@ -68,7 +68,7 @@ router.delete("/seen/:movieId", requireAuth, async (req: AuthenticatedRequest, r
     );
     res.json({ seen: false, movie_id: movieId });
   } catch (error) {
-    console.error("Error unmarking movie as seen:", error);
+    console.error("Error unmarking movie as seen:", (error as Error).message);
     res.status(500).json({ error: "Failed to unmark movie as seen" });
   }
 });

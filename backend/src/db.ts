@@ -7,21 +7,36 @@ function getDatabaseUrl(): string {
   if (!url) {
     throw new Error("DATABASE_URL is not set");
   }
-  return url.replace(/^['"]|['"]$/g, "");
+
+  const cleaned = url.replace(/^['"]|['"]$/g, "");
+
+  // Basic validation: must be a postgres connection string
+  if (!cleaned.startsWith("postgresql://") && !cleaned.startsWith("postgres://")) {
+    throw new Error(
+      `Invalid DATABASE_URL: must start with postgresql:// or postgres://. Got: ${cleaned.substring(0, 50)}...`,
+    );
+  }
+
+  return cleaned;
 }
 
 function shouldUseSsl(url: string): boolean {
-  // Enable SSL only for managed/remote databases that request it
-  // (e.g. "...sslmode=require"). A local Postgres (such as the Docker
-  // "db" service) does not support SSL by default, so disable it there.
-  return /sslmode=require/i.test(url);
+  // DATABASE_SSL is the explicit override — set it when the connection
+  // string doesn't contain "sslmode=require" but the provider still needs
+  // SSL (common with managed Postgres). Without an explicit signal, default
+  // to off so a local/internal Docker Postgres (e.g. Dokploy's own "db"
+  // service) keeps working without certs.
+  if (process.env.DATABASE_SSL !== undefined) {
+    return process.env.DATABASE_SSL === "true";
+  }
+  return /sslmode=(require|verify-ca|verify-full)/i.test(url);
 }
 
 const databaseUrl = getDatabaseUrl();
 
 export const pool = new Pool({
   connectionString: databaseUrl,
-  ssl: shouldUseSsl(databaseUrl) ? { rejectUnauthorized: false } : false,
+  ssl: shouldUseSsl(databaseUrl) ? { rejectUnauthorized: true } : false,
 });
 
 export async function initDatabase(): Promise<void> {
