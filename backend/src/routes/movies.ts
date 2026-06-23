@@ -29,16 +29,25 @@ function mapMovie(m: any) {
   };
 }
 
+function validatePage(page: any): number {
+  const pageNum = Number(page) || 1;
+  if (pageNum < 1 || pageNum > 10000) {
+    return 1;
+  }
+  return pageNum;
+}
+
 // Search movies
 router.get("/movies/search", async (req, res) => {
   try {
-    const { q, page = 1 } = req.query;
+    const { q, page } = req.query;
 
     if (!q) {
       return res.status(400).json({ error: "Query parameter 'q' is required" });
     }
 
-    const url = `${TMDB_BASE}/search/movie?query=${encodeURIComponent(String(q))}&page=${page}&language=en-US`;
+    const validatedPage = validatePage(page);
+    const url = `${TMDB_BASE}/search/movie?query=${encodeURIComponent(String(q))}&page=${validatedPage}&language=en-US`;
     const response = await fetch(url, { headers: getTmdbHeaders() });
     const data = await response.json();
 
@@ -49,7 +58,7 @@ router.get("/movies/search", async (req, res) => {
       page: data.page ?? 1,
     });
   } catch (error) {
-    console.error("Error searching movies:", error);
+    console.error("Error searching movies:", (error as Error).message);
     res.status(500).json({ error: "Failed to search movies" });
   }
 });
@@ -57,8 +66,9 @@ router.get("/movies/search", async (req, res) => {
 // Get trending movies
 router.get("/movies/trending", async (req, res) => {
   try {
-    const { page = 1 } = req.query;
-    const url = `${TMDB_BASE}/trending/movie/week?page=${page}&language=en-US`;
+    const { page } = req.query;
+    const validatedPage = validatePage(page);
+    const url = `${TMDB_BASE}/trending/movie/week?page=${validatedPage}&language=en-US`;
     const response = await fetch(url, { headers: getTmdbHeaders() });
     const data = await response.json();
 
@@ -69,7 +79,7 @@ router.get("/movies/trending", async (req, res) => {
       page: data.page ?? 1,
     });
   } catch (error) {
-    console.error("Error fetching trending movies:", error);
+    console.error("Error fetching trending movies:", (error as Error).message);
     res.status(500).json({ error: "Failed to fetch trending movies" });
   }
 });
@@ -77,8 +87,9 @@ router.get("/movies/trending", async (req, res) => {
 // Get popular movies
 router.get("/movies/popular", async (req, res) => {
   try {
-    const { page = 1 } = req.query;
-    const url = `${TMDB_BASE}/movie/popular?page=${page}&language=en-US`;
+    const { page } = req.query;
+    const validatedPage = validatePage(page);
+    const url = `${TMDB_BASE}/movie/popular?page=${validatedPage}&language=en-US`;
     const response = await fetch(url, { headers: getTmdbHeaders() });
     const data = await response.json();
 
@@ -89,7 +100,7 @@ router.get("/movies/popular", async (req, res) => {
       page: data.page ?? 1,
     });
   } catch (error) {
-    console.error("Error fetching popular movies:", error);
+    console.error("Error fetching popular movies:", (error as Error).message);
     res.status(500).json({ error: "Failed to fetch popular movies" });
   }
 });
@@ -129,7 +140,7 @@ router.get("/movies/:id", async (req, res) => {
       })),
     });
   } catch (error) {
-    console.error("Error fetching movie details:", error);
+    console.error("Error fetching movie details:", (error as Error).message);
     res.status(500).json({ error: "Failed to fetch movie details" });
   }
 });
