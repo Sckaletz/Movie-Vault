@@ -16,6 +16,13 @@ services:
     networks:
       - edge
       - backend
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    mem_limit: 512m
+    cpus: 1.0
+    pids_limit: 200
     restart: unless-stopped
 
   frontend:
@@ -28,9 +35,15 @@ services:
       - "80"
     depends_on:
       - backend
+
     networks:
       - edge
-      - backend
+
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 100
     restart: unless-stopped
 
   db:
@@ -51,6 +64,12 @@ services:
       retries: 5
     networks:
       - backend
+
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 1.0
+    pids_limit: 200
     restart: unless-stopped
 
 networks:
